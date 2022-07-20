@@ -483,7 +483,10 @@ def register_command(server: PluginServerInterface):
 			get_literal_node('del').
 			then(get_slot_node().runs(lambda src, ctx: delete_backup(src, ctx['slot'])))
 		).
-		then(get_literal_node('confirm').runs(confirm_restore)).
+		then(
+			get_literal_node('confirm').
+			then(GreedyText('comment').runs(confirm_restore))
+		).
 		then(get_literal_node('abort').runs(trigger_abort)).
 		then(get_literal_node('list').runs(lambda src: list_backup(src))).
 		then(get_literal_node('reload').runs(lambda src: load_config(src.get_server(), src)))
